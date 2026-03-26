@@ -1,0 +1,54 @@
+{
+  "entities": {
+    "PortfolioProject": {
+      "title": "Portfolio Project",
+      "description": "A showcase of real event work by Elite Events.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier." },
+        "mediaUrl": { "type": "string", "format": "uri", "description": "URL of the project photo or video." },
+        "mediaType": { "type": "string", "enum": ["image", "video"], "description": "Type of media." },
+        "category": { "type": "string", "enum": [
+          "Decoration & Styling", 
+          "Photography", 
+          "Videography", 
+          "Catering", 
+          "Wedding Planning", 
+          "Corporate Events", 
+          "Entertainment", 
+          "Lighting & Sound",
+          "VIP Transportation",
+          "Venue Selection",
+          "Invitations & Stationery",
+          "Gifting & Favors"
+        ], "description": "Service category." },
+        "title": { "type": "string", "description": "Title of the project." },
+        "description": { "type": "string", "description": "Brief description of the work." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of upload." },
+        "authorUid": { "type": "string", "description": "UID of the admin who uploaded it." }
+      },
+      "required": ["mediaUrl", "mediaType", "category", "title", "createdAt", "authorUid"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Admin user profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "viewer"] }
+      },
+      "required": ["uid", "email", "role"]
+    }
+  },
+  "firestore": {
+    "/portfolio_projects/{projectId}": {
+      "schema": "PortfolioProject",
+      "description": "Collection of portfolio projects."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Admin user profiles."
+    }
+  }
+}

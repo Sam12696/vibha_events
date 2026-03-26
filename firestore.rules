@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: portfolio_projects
+    // Fields:
+    //   - mediaUrl: string (required, uri)
+    //   - mediaType: string (required, enum: ['image', 'video'])
+    //   - category: string (required, enum)
+    //   - title: string (required)
+    //   - description: string (optional)
+    //   - createdAt: timestamp (required)
+    //   - authorUid: string (required)
+    //
+    // Collection: users
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required, email)
+    //   - role: string (required, enum: ['admin'])
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "marupakulanaveen23@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidProject(data) {
+      return data.keys().hasAll(['mediaUrl', 'mediaType', 'category', 'title', 'createdAt', 'authorUid']) &&
+             data.mediaUrl is string && data.mediaUrl.size() < 2048 &&
+             data.mediaType in ['image', 'video'] &&
+             data.category in [
+               "Decoration & Styling", 
+               "Photography", 
+               "Videography", 
+               "Catering", 
+               "Wedding Planning", 
+               "Corporate Events", 
+               "Entertainment", 
+               "Lighting & Sound",
+               "VIP Transportation",
+               "Venue Selection",
+               "Invitations & Stationery",
+               "Gifting & Favors"
+             ] &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.createdAt is timestamp &&
+             data.authorUid == request.auth.uid;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.role == 'admin';
+    }
+
+    // Portfolio Projects
+    match /portfolio_projects/{projectId} {
+      allow read: if true; // Publicly readable
+      allow create: if isAdmin() && isValidProject(request.resource.data);
+      allow update: if isAdmin() && isValidProject(request.resource.data) && request.resource.data.authorUid == resource.data.authorUid;
+      allow delete: if isAdmin();
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create, update: if isAuthenticated() && request.auth.uid == userId && isValidUser(request.resource.data);
+    }
+  }
+}
