@@ -18,9 +18,8 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect, FormEvent, Component, ErrorInfo, ReactNode } from "react";
 import { Toaster, toast } from "sonner";
-import { Routes, Route, Link, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { PortfolioGallery } from "./components/PortfolioGallery";
-import { CMSDashboard } from "./components/CMSDashboard";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -78,11 +77,37 @@ class ErrorBoundary extends React.Component<any, any> {
 }
 
 const ConsultationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [formData, setFormData] = useState({ fullName: '', email: '', description: '' });
+  const [errors, setErrors] = useState<{ fullName?: string; email?: string }>({});
+
   if (!isOpen) return null;
+
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const newErrors: { fullName?: string; email?: string } = {};
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "Full name is required";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     toast.success("Consultation request received. Our concierge will contact you shortly.");
+    setFormData({ fullName: '', email: '', description: '' });
     onClose();
   };
 
@@ -108,16 +133,35 @@ const ConsultationModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2 border-b border-outline-variant/30 group">
-            <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Full Name</label>
-            <input required className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" placeholder="ALEXANDER STERLING" type="text"/>
+            <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Full Name *</label>
+            <input 
+              value={formData.fullName}
+              onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+              className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" 
+              placeholder="ALEXANDER STERLING" 
+              type="text"
+            />
+            {errors.fullName && <p className="text-red-400 text-[10px] mt-1">{errors.fullName}</p>}
           </div>
           <div className="space-y-2 border-b border-outline-variant/30 group">
-            <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Email Address</label>
-            <input required className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" placeholder="ALEX@VIBHAEVENTS.COM" type="email"/>
+            <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Email Address *</label>
+            <input 
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" 
+              placeholder="ALEX@VIBHAEVENTS.COM" 
+              type="email"
+            />
+            {errors.email && <p className="text-red-400 text-[10px] mt-1">{errors.email}</p>}
           </div>
           <div className="space-y-2 border-b border-outline-variant/30 group">
             <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Brief Description</label>
-            <textarea className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none resize-none h-24" placeholder="TELL US ABOUT YOUR VISION..."></textarea>
+            <textarea 
+              value={formData.description}
+              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              className="w-full bg-transparent border-none py-3 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none resize-none h-24" 
+              placeholder="TELL US ABOUT YOUR VISION..."
+            ></textarea>
           </div>
           <button type="submit" className="w-full gold-gradient text-on-primary py-4 font-bold uppercase tracking-widest transition-transform duration-300 hover:scale-[1.02]">
             Submit Request
@@ -149,7 +193,6 @@ const Navbar = ({ onOpenConsultation }: { onOpenConsultation: () => void }) => (
       <a className="text-on-surface-variant hover:text-[#f9f9f9] transition-all duration-500" href="/#experience">Experience</a>
       <a className="text-on-surface-variant hover:text-[#f9f9f9] transition-all duration-500" href="/#services">Services</a>
       <a className="text-on-surface-variant hover:text-[#f9f9f9] transition-all duration-500" href="/#portfolio">Portfolio</a>
-      <Link className="text-on-surface-variant hover:text-[#f9f9f9] transition-all duration-500" to="/cms">CMS</Link>
     </div>
     <button 
       onClick={onOpenConsultation}
@@ -475,6 +518,37 @@ const Masterpieces = () => {
 
 const EngineRoom = ({ onOpenConsultation }: { onOpenConsultation: () => void }) => {
   const [eventType, setEventType] = useState("Wedding");
+  const [targetDate, setTargetDate] = useState("");
+  const [guestCount, setGuestCount] = useState("");
+  const [errors, setErrors] = useState<{ targetDate?: string; guestCount?: string }>({});
+
+  const formatDateToDisplay = (dateStr: string): string => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Only allow numbers
+    if (value === "" || /^\d+$/.test(value)) {
+      setGuestCount(value);
+      if (value) {
+        setErrors({...errors, guestCount: undefined});
+      }
+    }
+  };
+
+  const handleDateBlur = () => {
+    if (targetDate && !targetDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      setErrors({...errors, targetDate: "Invalid date"});
+    } else if (targetDate) {
+      setErrors({...errors, targetDate: undefined});
+    }
+  };
   
   return (
     <section className="py-32 bg-surface">
@@ -533,17 +607,53 @@ const EngineRoom = ({ onOpenConsultation }: { onOpenConsultation: () => void }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8">
               <div className="space-y-2 border-b border-outline-variant/30 group">
                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Target Date</label>
-                <input className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" placeholder="MM / DD / YYYY" type="text"/>
+                <input 
+                  type="date" 
+                  value={targetDate}
+                  onChange={(e) => setTargetDate(e.target.value)}
+                  onBlur={handleDateBlur}
+                  className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none cursor-pointer" 
+                  placeholder="Select date"
+                />
+                {targetDate && <p className="text-on-surface-variant text-[10px] mt-1">Selected: {formatDateToDisplay(targetDate)}</p>}
+                {errors.targetDate && <p className="text-red-400 text-[10px] mt-1">{errors.targetDate}</p>}
               </div>
               <div className="space-y-2 border-b border-outline-variant/30 group">
                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Guest Count</label>
-                <input className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" placeholder="e.g. 500+" type="text"/>
+                <input 
+                  type="text"
+                  value={guestCount}
+                  onChange={handleGuestCountChange}
+                  className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" 
+                  placeholder="e.g. 500"
+                  maxLength="6"
+                />
+                {guestCount && <p className="text-on-surface-variant text-[10px] mt-1">Guests: {guestCount}</p>}
+                {errors.guestCount && <p className="text-red-400 text-[10px] mt-1">{errors.guestCount}</p>}
               </div>
             </div>
 
             <div className="flex justify-end pt-12">
               <button 
-                onClick={onOpenConsultation}
+                onClick={() => {
+                  const newErrors: { targetDate?: string; guestCount?: string } = {};
+                  if (!targetDate) {
+                    newErrors.targetDate = "Target date is required";
+                  }
+                  if (!guestCount) {
+                    newErrors.guestCount = "Guest count is required";
+                  } else if (!/^\d+$/.test(guestCount)) {
+                    newErrors.guestCount = "Must be a valid number";
+                  }
+                  
+                  if (Object.keys(newErrors).length > 0) {
+                    setErrors(newErrors);
+                    return;
+                  }
+                  
+                  setErrors({});
+                  onOpenConsultation();
+                }}
                 className="gold-gradient text-on-primary px-12 md:px-16 py-5 md:py-6 font-bold uppercase tracking-[0.2em] transition-transform duration-300 hover:scale-[1.02]"
               >
                 Initialize Consultation
@@ -572,13 +682,7 @@ const Testimonials = () => (
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-8 grayscale opacity-40">
-        {["PORSCHE", "ROLEX", "CHANEL", "DIOR"].map(brand => (
-          <div key={brand} className="flex items-center justify-center p-8 border border-outline-variant/20">
-            <span className="text-xl md:text-2xl font-black tracking-widest">{brand}</span>
-          </div>
-        ))}
-      </div>
+
     </div>
   </section>
 );
@@ -685,7 +789,6 @@ export default function App() {
       <div className="min-h-screen">
         <Toaster position="top-center" expand={false} richColors />
         <Routes>
-          <Route path="/cms" element={<CMSDashboard />} />
           <Route path="/" element={
             <>
               <Navbar onOpenConsultation={() => setIsConsultationOpen(true)} />

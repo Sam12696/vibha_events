@@ -16,7 +16,8 @@ const CATEGORIES: Category[] = [
   "VIP Transportation",
   "Venue Selection",
   "Invitations & Stationery",
-  "Gifting & Favors"
+  "Gifting & Favors",
+  "Make-up"
 ];
 
 export const PortfolioGallery: React.FC = () => {
