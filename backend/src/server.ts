@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 
 // Initialize Express app
 const app: Express = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
 // ============================================
 // MIDDLEWARE SETUP
