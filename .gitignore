@@ -6,3 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Firebase config contains live API keys — use env vars instead
+firebase-applet-config.json
+
+# Python
+__pycache__/
+.venv/
+*.pyc

@@ -1,3 +1,4 @@
+import "dotenv/config"; // load .env before anything else
 import express, { Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -6,94 +7,80 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 
-// Import routes and middleware
-import apiRoutes from "./routes/projectRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize Express app
 const app: Express = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
+const isProd = process.env.NODE_ENV === "production";
 
-// ============================================
-// MIDDLEWARE SETUP
-// ============================================
+// ─── Security ────────────────────────────────────────────────────────────────
 
-// Security middleware
 app.use(
   helmet({
-    contentSecurityPolicy: false, // Disabled for development with Vite
+    // TODO: Enable and configure CSP for production with your asset domains
+    contentSecurityPolicy: false,
   })
 );
 
-// CORS configuration
+// ─── CORS ────────────────────────────────────────────────────────────────────
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
+  : [`http://localhost:${PORT}`];
+
 app.use(
   cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
+    origin: isProd ? allowedOrigins : true, // allow all in dev
     credentials: true,
   })
 );
 
-// Logging middleware
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+// ─── Logging & Parsing ───────────────────────────────────────────────────────
 
-// Body parser
+app.use(morgan(isProd ? "combined" : "dev"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// ============================================
-// API ROUTES
-// ============================================
+// ─── API Routes ──────────────────────────────────────────────────────────────
 
-app.use("/api", apiRoutes);
+app.use("/api", projectRoutes);
+app.use("/api/auth", authRoutes);
 
-// ============================================
-// FRONTEND SERVING (Vite in dev, static in prod)
-// ============================================
+// ─── Frontend Serving ────────────────────────────────────────────────────────
 
 async function setupFrontend() {
-  if (process.env.NODE_ENV !== "production") {
-    // Development: Use Vite middleware
+  if (!isProd) {
+    // Development: Vite middleware (reads vite.config.ts at project root)
     try {
-      // Get project root (2 levels up from backend/src)
       const projectRoot = path.join(__dirname, "../../");
-      
       const vite = await createViteServer({
-        root: projectRoot,
+        configFile: path.join(projectRoot, "vite.config.ts"),
         server: { middlewareMode: true },
         appType: "spa",
       });
       app.use(vite.middlewares);
     } catch (error) {
-      console.error("Warning: Vite server setup failed", error);
+      console.error("Warning: Vite dev server setup failed", error);
     }
   } else {
-    // Production: Serve built frontend
+    // Production: serve built frontend from dist/
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get("*", (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
-  
-  // 404 handler (must be after frontend is set up)
-  app.use(notFoundHandler);
 
-  // Global error handler (must be last)
+  app.use(notFoundHandler);
   app.use(errorHandler);
 }
 
-// ============================================
-// ERROR HANDLING MIDDLEWARE
-// ============================================
-
-// These will be added inside setupFrontend after the frontend is configured
-
-// ============================================
-// START SERVER
-// ============================================
+// ─── Start ───────────────────────────────────────────────────────────────────
 
 async function startServer() {
   try {
@@ -105,24 +92,25 @@ async function startServer() {
 ║   Vibha Events Server                    ║
 ╚══════════════════════════════════════════╝
 
-Environment: ${process.env.NODE_ENV || "development"}
-Server: http://localhost:${PORT}
-API: http://localhost:${PORT}/api
+Environment : ${process.env.NODE_ENV || "development"}
+Server      : http://localhost:${PORT}
+API         : http://localhost:${PORT}/api
+Auth        : http://localhost:${PORT}/api/auth
 
 Features:
-✅ REST API
-✅ CORS Enabled
-✅ Security (Helmet)
-✅ Morgan Logging
-${process.env.NODE_ENV !== "production" ? "✅ Vite Dev Server" : "✅ Static Files Serving"}
+  ✅ REST API (projects CRUD)
+  ✅ JWT Authentication
+  ✅ CORS (${isProd ? allowedOrigins.join(", ") : "all origins"})
+  ✅ Security Headers (Helmet)
+  ✅ Request Logging (Morgan)
+  ${isProd ? "✅ Static File Serving" : "✅ Vite Dev Server"}
       `);
     });
 
-    // Graceful shutdown
     process.on("SIGTERM", () => {
-      console.log("SIGTERM signal received: closing HTTP server");
+      console.log("SIGTERM received — shutting down gracefully");
       server.close(() => {
-        console.log("HTTP server closed");
+        console.log("Server closed");
         process.exit(0);
       });
     });
@@ -132,7 +120,6 @@ ${process.env.NODE_ENV !== "production" ? "✅ Vite Dev Server" : "✅ Static Fi
   }
 }
 
-// Start the server
 startServer();
 
 export default app;

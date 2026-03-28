@@ -1,1 +1,101 @@
-[]
+[
+  {
+    "id": "1",
+    "title": "Crystal Ballroom Wedding",
+    "description": "Elegant wedding with premium floral arrangements and crystal chandeliers",
+    "category": "Decoration & Styling",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuD2y8eXIjXqDs-3N2Pvnga0-9t13TVwuiBRzMpAN0Aqt7Y0ad1FZotEtmJUn5TToqfG38l8Og_WarSqinUYvjRmN98wm6DtGkqinz2l2n6a53eInSf9rGADG_I6bfovPxuC7UcqJOwsaBFR2cr733gn8bVUwl2AP8oL4sNi5och1mBxRXdzIFPPfPp8MruYOwhPMjaB7G0DopcWtDOQMNKaO-Pa8eU1mkeVb_As4dmMdmcxtobhrGaAtXxMReIie2UkxCJXPTwqpe4",
+    "mediaType": "image",
+    "createdAt": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Golden Hour Photoshoot",
+    "description": "Stunning golden hour photography session capturing authentic moments",
+    "category": "Photography",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuADk4pQbbhOTk3ALnKVqOYbrnrrWimPDDOcm6pH1IJB0cRvWKX3jOg6lSdUpB_Z0dx-5c4cFK-Te0bcI7-CHSB8z2PsQals4eXAZK1CdH3CYBNzd6lhGDr5O5z-R9VdbiHpacafyGLzbgVvtUvWJH7bWPLfm-XIUnR_LUWg6eEwfWya2hBhTfFCRRjpgOETB6yXN4AoYjiKYa2_3U9Mttv7ywVhtBnmHXBKqEX8V2JKiKFOWSXBQxZXBIh7G_wQlOzKN4EvtJXqHzs",
+    "mediaType": "image",
+    "createdAt": "2024-01-10T14:20:00Z"
+  },
+  {
+    "id": "3",
+    "title": "Michelin Star Banquet",
+    "description": "Multi-course gourmet dinner with exquisite plating and wine pairings",
+    "category": "Catering",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuAAKHfFp-eTSdkVe-AwXhTMXTovnLdr0aJU_S1QWh9ge5m21fnbG5ZXQ1MTOftiZM7BVfg3sQJzxjN0LkmHr1XF682LP84Rmc7Wj-ex8U_6mj36UtD8rtrdjT8j2Ar1bBU0qfNC_rII2hYnmDtV0texo2m_Ub1-Oj_pqRTg6qWN_3udPpMMFP4JoIMW2qm5ARVdPYb339Mxw_NsjPoCYwD5oL-vGBqGm2mZ-8-p29BW60uk5u3IcTMBS8nxWbcWEXY6YfPSgloI3TA",
+    "mediaType": "image",
+    "createdAt": "2024-02-05T18:00:00Z"
+  },
+  {
+    "id": "4",
+    "title": "Wedding - Forest Ceremony",
+    "description": "Intimate forest wedding with nature-inspired decor and soft lighting",
+    "category": "Wedding Planning",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDsUD_cO4KMxfJvK1EcfwRVAKVWzRs_MzeTSdC9RcMV05KSsroukRmS_BXKBrhzM4TTUAiaqFeCp12S5wYphIWchs1l2K8sigXL3YQTH7ifMDaLkeZa5eQLoCaPTFavvAKfokQC45BPbA2Gt2S6xkPVMODDLyO6hEK8W_0PqIDFyCbyMkpmqdeaZWiJL3HAGmPUD4p5Pgx2qqi4D0rrDBiSW0_KARNc7oYElYnUb0trCBJNrADl_hTA1IXmd1wYhPuUPfCvUnSfggw",
+    "mediaType": "image",
+    "createdAt": "2024-02-10T12:15:00Z"
+  },
+  {
+    "id": "5",
+    "title": "Corporate Gala Evening",
+    "description": "Professional corporate gala with elegant setup and stage production",
+    "category": "Corporate Events",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuCFsaGm4PWu2fWXSezezN0Rq0Oa-BDZhd9fzits5wsAdKvbayOemXXGt63uDMNim4vmtrklFWSRoWxXjbaddElvqfYqM8Jq3-b1oVqZkhfuPs5uJLtVACKWdH0iWPsum2RB0Df5Af_cJNENWqmA7rmvjezJ5K8N7rfpgXCiGPC3WMdS4V2O8V9tTAIWDCKBpiTmz6wpgRvb1rxtVd_M84_b1NRI_eHkhTL5GbkaPvxHiP04IvIFLkWi26mNJhzPJtTIr3DnVYbsFok",
+    "mediaType": "image",
+    "createdAt": "2024-02-14T19:30:00Z"
+  },
+  {
+    "id": "6",
+    "title": "Live Band Performance",
+    "description": "International live band performing at luxury event with professional sound system",
+    "category": "Entertainment",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDylnf94tS6sbOmWzpczRdZYLoK5SlHe_pmNAkKLI1SetJkgfn7aqoeQBWZE0O8qYBuyfTWIx1nxkU-g09TDKOmD3y6HkPpbb2Hkagk4VmKPPKJ5K9rhRAJKY_FFWEj4vBXkWAjkaoRMDjrGO0yduhDqxo5VQKcE1SJetgcXXF2wlns6nWMx-_nNyu5iYVe72vY_ZXDDj2SyEw0TSm-a1fsXxdHnTGjT4mAwfTF7NE3wTCoa_ZU1qK5CdH8Dt0Uh2ULuGxy4XFG1R8",
+    "mediaType": "image",
+    "createdAt": "2024-02-18T20:00:00Z"
+  },
+  {
+    "id": "7",
+    "title": "Stage Lighting Setup",
+    "description": "Professional lighting and sound production with LED walls and pyrotechnics",
+    "category": "Lighting & Sound",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDT93Oq54BIY8gXqfFKoH2ZDuNXyOUV773QkZsEjLc8RpFpDjusQ0HH4yH7rcpkv58HxXuvtj7wNHNLDUud7Xu71qke07XHiZ4v-SMoKLl8iwiPDW9gXaeVLGBMfljI3aIImP4G7hM6jWO8kBH2GoQVc9loOltuIo5F5sM3p6ExTU8V_utPky18-HbDDWdxi8mVX6HqnOjSghRaaQ4qPTYZVgDcHWE5FHbU",
+    "mediaType": "image",
+    "createdAt": "2024-02-22T17:45:00Z"
+  },
+  {
+    "id": "8",
+    "title": "Luxury Chauffeur Fleet",
+    "description": "Premium VIP transportation with luxury vehicle fleet and professional drivers",
+    "category": "VIP Transportation",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuBdFRyhlp99_-E9aKKWUvJClNjjZlAI-98tdnihdYGYsp_G4p8oA8R-WI96IPVo3DYMmR8_o1S_SB6Jmvs_sAzyvdUYY6gTmWjwUqw9VOQWmBZFru8ByxdcUxeiTEZwddCz0m4Hq82QztGGjCk6V68pDZ9S7l-fYUFZVw1PecuIica1caA4H4t7wCQfXMBXnOuZuKGADYxnlCY2Vcwy9HnJn3c9SujdbbxBxIIONZqjzHP9HkFaq5Ws1Aw_a53ybCYgyWyJOc0ljVk",
+    "mediaType": "image",
+    "createdAt": "2024-03-01T08:00:00Z"
+  },
+  {
+    "id": "9",
+    "title": "Beachfront Venue Setup",
+    "description": "Beautiful beachfront venue decorated with lights and seating arrangements",
+    "category": "Venue Selection",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuD2y8eXIjXqDs-3N2Pvnga0-9t13TVwuiBRzMpAN0Aqt7Y0ad1FZotEtmJUn5TToqfG38l8Og_WarSqinUYvjRmN98wm6DtGkqinz2l2n6a53eInSf9rGADG_I6bfovPxuC7UcqJOwsaBFR2cr733gn8bVUwl2AP8oL4sNi5och1mBxRXdzIFPPfPp8MruYOwhPMjaB7G0DopcWtDOQMNKaO-Pa8eU1mkeVb_As4dmMdmcxtobhrGaAtXxMReIie2UkxCJXPTwqpe4",
+    "mediaType": "image",
+    "createdAt": "2024-03-05T09:15:00Z"
+  },
+  {
+    "id": "10",
+    "title": "Wedding Invitation Design",
+    "description": "Elegant custom-designed wedding invitations with premium finishes",
+    "category": "Invitations & Stationery",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuADk4pQbbhOTk3ALnKVqOYbrnrrWimPDDOcm6pH1IJB0cRvWKX3jOg6lSdUpB_Z0dx-5c4cFK-Te0bcI7-CHSB8z2PsQals4eXAZK1CdH3CYBNzd6lhGDr5O5z-R9VdbiHpacafyGLzbgVvtUvWJH7bWPLfm-XIUnR_LUWg6eEwfWya2hBhTfFCRRjpgOETB6yXN4AoYjiKYa2_3U9Mttv7ywVhtBnmHXBKqEX8V2JKiKFOWSXBQxZXBIh7G_wQlOzKN4EvtJXqHzs",
+    "mediaType": "image",
+    "createdAt": "2024-03-08T11:30:00Z"
+  },
+  {
+    "id": "11",
+    "title": "Gift Hampers & Favors",
+    "description": "Luxurious custom gift hampers and party favors for guests",
+    "category": "Gifting & Favors",
+    "mediaUrl": "https://lh3.googleusercontent.com/aida-public/AB6AXuDylnf94tS6sbOmWzpczRdZYLoK5SlHe_pmNAkKLI1SetJkgfn7aqoeQBWZE0O8qYBuyfTWIx1nxkU-g09TDKOmD3y6HkPpbb2Hkagk4VmKPPKJ5K9rhRAJKY_FFWEj4vBXkWAjkaoRMDjrGO0yduhDqxo5VQKcE1SJetgcXXF2wlns6nWMx-_nNyu5iYVe72vY_ZXDDj2SyEw0TSm-a1fsXxdHnTGjT4mAwfTF7NE3wTCoa_ZU1qK5CdH8Dt0Uh2ULuGxy4XFG1R8",
+    "mediaType": "image",
+    "createdAt": "2024-03-12T13:00:00Z"
+  }
+]

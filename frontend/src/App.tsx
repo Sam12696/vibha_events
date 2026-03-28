@@ -20,6 +20,7 @@ import React, { useState, useEffect, FormEvent, Component, ErrorInfo, ReactNode 
 import { Toaster, toast } from "sonner";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { PortfolioGallery } from "./components/PortfolioGallery";
+import { CMSDashboard } from "./components/CMSDashboard";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -181,11 +182,11 @@ const Navbar = ({ onOpenConsultation }: { onOpenConsultation: () => void }) => (
       <div className="hidden lg:flex items-center gap-6 text-[10px] text-on-surface-variant tracking-widest uppercase border-l border-outline-variant/30 pl-8">
         <div className="flex items-center gap-2">
           <Phone className="w-3 h-3 text-primary" />
-          <span>+91 98765 43210</span>
+          <span>+91 9515701772</span>
         </div>
         <div className="flex items-center gap-2">
           <Mail className="w-3 h-3 text-primary" />
-          <span>contact@vibhaevents.com</span>
+          <span>info@vibhaevents.co.site</span>
         </div>
       </div>
     </div>
@@ -522,30 +523,36 @@ const EngineRoom = ({ onOpenConsultation }: { onOpenConsultation: () => void }) 
   const [guestCount, setGuestCount] = useState("");
   const [errors, setErrors] = useState<{ targetDate?: string; guestCount?: string }>({});
 
-  const formatDateToDisplay = (dateStr: string): string => {
-    if (!dateStr) return "";
-    const date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
   const handleGuestCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    // Only allow numbers
     if (value === "" || /^\d+$/.test(value)) {
       setGuestCount(value);
-      if (value) {
-        setErrors({...errors, guestCount: undefined});
-      }
+      if (value) setErrors({...errors, guestCount: undefined});
     }
   };
 
+  // Auto-format date input as DD/MM/YYYY while typing
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, ''); // digits only
+    let formatted = raw;
+    if (raw.length > 2) formatted = raw.slice(0, 2) + '/' + raw.slice(2);
+    if (raw.length > 4) formatted = raw.slice(0, 2) + '/' + raw.slice(2, 4) + '/' + raw.slice(4, 8);
+    setTargetDate(formatted);
+    setErrors({...errors, targetDate: undefined});
+  };
+
   const handleDateBlur = () => {
-    if (targetDate && !targetDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    if (!targetDate) return;
+    const match = targetDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!match) {
+      setErrors({...errors, targetDate: "Enter a valid date (DD/MM/YYYY)"});
+      return;
+    }
+    const [, day, month, year] = match;
+    const date = new Date(`${year}-${month}-${day}`);
+    if (isNaN(date.getTime())) {
       setErrors({...errors, targetDate: "Invalid date"});
-    } else if (targetDate) {
+    } else {
       setErrors({...errors, targetDate: undefined});
     }
   };
@@ -607,15 +614,15 @@ const EngineRoom = ({ onOpenConsultation }: { onOpenConsultation: () => void }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8">
               <div className="space-y-2 border-b border-outline-variant/30 group">
                 <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant group-focus-within:text-primary">Target Date</label>
-                <input 
-                  type="date" 
+                <input
+                  type="text"
                   value={targetDate}
-                  onChange={(e) => setTargetDate(e.target.value)}
+                  onChange={handleDateChange}
                   onBlur={handleDateBlur}
-                  className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none cursor-pointer" 
-                  placeholder="Select date"
+                  className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none"
+                  placeholder="DD/MM/YYYY"
+                  maxLength={10}
                 />
-                {targetDate && <p className="text-on-surface-variant text-[10px] mt-1">Selected: {formatDateToDisplay(targetDate)}</p>}
                 {errors.targetDate && <p className="text-red-400 text-[10px] mt-1">{errors.targetDate}</p>}
               </div>
               <div className="space-y-2 border-b border-outline-variant/30 group">
@@ -626,7 +633,7 @@ const EngineRoom = ({ onOpenConsultation }: { onOpenConsultation: () => void }) 
                   onChange={handleGuestCountChange}
                   className="w-full bg-transparent border-none py-4 text-on-surface placeholder:text-outline-variant focus:ring-0 outline-none" 
                   placeholder="e.g. 500"
-                  maxLength="6"
+                  maxLength={6}
                 />
                 {guestCount && <p className="text-on-surface-variant text-[10px] mt-1">Guests: {guestCount}</p>}
                 {errors.guestCount && <p className="text-red-400 text-[10px] mt-1">{errors.guestCount}</p>}
@@ -696,9 +703,15 @@ const Footer = () => (
           Architecting high-fidelity experiences for those who define the future.
         </p>
         <div className="flex gap-4">
-          <Globe className="w-5 h-5 text-on-surface-variant cursor-pointer hover:text-primary transition-colors" />
-          <Share2 className="w-5 h-5 text-on-surface-variant cursor-pointer hover:text-primary transition-colors" />
-          <User className="w-5 h-5 text-on-surface-variant cursor-pointer hover:text-primary transition-colors" />
+          <a href="/" title="Website" className="text-on-surface-variant hover:text-primary transition-colors">
+            <Globe className="w-5 h-5" />
+          </a>
+          <a href="https://www.instagram.com/vibhaevents" target="_blank" rel="noopener noreferrer" title="Instagram" className="text-on-surface-variant hover:text-primary transition-colors">
+            <Share2 className="w-5 h-5" />
+          </a>
+          <a href="/cms" title="Admin Login" className="text-on-surface-variant hover:text-primary transition-colors">
+            <User className="w-5 h-5" />
+          </a>
         </div>
       </div>
       
@@ -722,11 +735,11 @@ const Footer = () => (
         <ul className="space-y-4 text-[10px] tracking-widest uppercase text-on-surface-variant">
           <li className="flex items-center gap-3">
             <Phone className="w-3 h-3 text-primary" />
-            <span>+91 98765 43210</span>
+            <span>+91 9515701772</span>
           </li>
           <li className="flex items-center gap-3">
             <Mail className="w-3 h-3 text-primary" />
-            <span>contact@vibhaevents.com</span>
+            <span>info@vibhaevents.co.site</span>
           </li>
           <li>Mumbai Office</li>
           <li>London Atelier</li>
@@ -760,7 +773,7 @@ const Footer = () => (
     </div>
     
     <div className="max-w-7xl mx-auto mt-24 pt-12 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] tracking-widest uppercase text-on-surface-variant">
-      <p>© 2024 Vibha Event Architecture. All Rights Reserved.</p>
+      <p>© 2026 Vibha Event Architecture. All Rights Reserved.</p>
       <div className="flex flex-wrap justify-center gap-6 md:gap-12">
         <a className="hover:text-[#f9f9f9] transition-colors" href="#">Privacy Policy</a>
         <a className="hover:text-[#f9f9f9] transition-colors" href="#">Terms of Service</a>
@@ -789,6 +802,7 @@ export default function App() {
       <div className="min-h-screen">
         <Toaster position="top-center" expand={false} richColors />
         <Routes>
+          <Route path="/cms" element={<CMSDashboard />} />
           <Route path="/" element={
             <>
               <Navbar onOpenConsultation={() => setIsConsultationOpen(true)} />

@@ -1,24 +1,16 @@
 import { Router } from "express";
 import * as projectsController from "../controllers/projectsController.js";
+import { requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-/**
- * GET /api/projects
- * Get all projects
- */
+/** Public routes */
 router.get("/projects", projectsController.getProjects);
-
-/**
- * GET /api/projects/:id
- * Get a single project by ID
- */
 router.get("/projects/:id", projectsController.getProjectById);
-
-/**
- * GET /api/health
- * Health check endpoint
- */
 router.get("/health", projectsController.health);
+
+/** Admin-only routes */
+router.post("/projects", requireAdmin, projectsController.addProject);
+router.delete("/projects/:id", requireAdmin, projectsController.deleteProject);
 
 export default router;

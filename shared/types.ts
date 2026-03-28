@@ -1,6 +1,6 @@
-/**
- * Shared type definitions used by frontend and backend
- */
+// Shared types used by both frontend and backend.
+// Import in backend: import type { ... } from '../../shared/types.js'
+// Import in frontend: import type { ... } from '../../shared/types'
 
 export type Category =
   | "Decoration & Styling"
@@ -24,29 +24,21 @@ export interface PortfolioProject {
   category: Category;
   title: string;
   description?: string;
-  createdAt: string; // ISO string
+  createdAt: string; // ISO 8601
   authorUid?: string;
 }
 
-export interface ConsultationRequest {
-  id: string;
-  fullName: string;
-  email: string;
-  description?: string;
-  createdAt: string;
-  status: "pending" | "contacted" | "completed";
-}
-
-export interface EventBlueprint {
-  eventType: string;
-  targetDate: string;
-  guestCount: number;
-  selectedServices: string[];
-}
-
-export interface ApiResponse<T> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   message?: string;
-  timestamp: string;
+}
+
+export interface ConsultationRequest {
+  fullName: string;
+  email: string;
+  description?: string;
+  eventType?: string;
+  targetDate?: string;
+  guestCount?: number;
 }
