@@ -15,9 +15,11 @@ export default defineConfig({
     },
   },
 
+  base: '/vibha_events/',
+
   build: {
-    // Output to dist/ at project root
-    outDir: '../dist',
+    // Output to docs/ for GitHub Pages
+    outDir: '../docs',
     emptyOutDir: true,
   },
 
